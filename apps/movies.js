@@ -7,16 +7,24 @@ import { db } from "../utils/db.js";
 const movieRouter = Router();
 
 movieRouter.get("/", async (req, res) => {
-  // 2) เลือก Collection ที่ชื่อ `movies`
+  const limit = req.query.limit ?? 10;
+  const title = req.query.title;
+  const year = Number(req.query);
+
+  const query = {};
+
+  if (year) {
+    query.year = year;
+  }
+
+  if (title) {
+    query.title = title;
+  }
+
   const collection = db.collection("movies");
 
-  // 3) เริ่ม Query โดยใช้ `collection.find(query)`
-  const movies = await collection
-    .find({ year: 2008 })
-    .limit(10) // limit the result documents by 10
-    .toArray(); // convert documents into an array
+  const movies = await collection.find(query).limit(limit).toArray();
 
-  // 4) Return ตัว Response กลับไปหา Client
   return res.json({ data: movies });
 });
 
