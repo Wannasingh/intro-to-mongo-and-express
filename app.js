@@ -1,6 +1,4 @@
 import express from "express";
-import bodyParser from "body-parser";
-import cors from "cors";
 import movieRouter from "./apps/movies.js";
 import { client } from "./utils/db.js";
 
@@ -10,8 +8,9 @@ async function init() {
 
   await client.connect();
 
-  app.use(cors());
-  app.use(bodyParser.json());
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
+
   app.use("/movies", movieRouter);
 
   app.get("/", (req, res) => {
