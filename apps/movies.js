@@ -6,7 +6,6 @@ import { db } from "../utils/db.js";
 const movieRouter = Router();
 
 movieRouter.get("/", async (req, res) => {
-  const limit = req.query.limit ?? 10;
   const title = req.query.title;
   const year = Number(req.query.year);
 
@@ -22,7 +21,7 @@ movieRouter.get("/", async (req, res) => {
 
   const collection = db.collection("movies");
 
-  const movies = await collection.find(query).limit(limit).toArray();
+  const movies = await collection.find(query).limit(10).toArray();
 
   return res.json({ data: movies });
 });
