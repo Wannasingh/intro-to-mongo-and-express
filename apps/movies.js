@@ -1,7 +1,6 @@
 import { ObjectId } from "mongodb";
 import { Router } from "express";
 
-// 1) Import ตัว Database ที่สร้างไว้มาใช้งาน
 import { db } from "../utils/db.js";
 
 const movieRouter = Router();
@@ -9,7 +8,7 @@ const movieRouter = Router();
 movieRouter.get("/", async (req, res) => {
   const limit = req.query.limit ?? 10;
   const title = req.query.title;
-  const year = Number(req.query);
+  const year = Number(req.query.year);
 
   const query = {};
 
@@ -18,7 +17,7 @@ movieRouter.get("/", async (req, res) => {
   }
 
   if (title) {
-    query.title = title;
+    query.title = new RegExp(title, "i");
   }
 
   const collection = db.collection("movies");
