@@ -24,10 +24,25 @@ movieRouter.post("/", async (req, res) => {
   // 2) เลือก Collection ที่ชื่อ `movies`
   const collection = db.collection("movies");
 
+  // 3) เริ่ม Insert ข้อมูลลงใน Database โดยใช้ `collection.insertMany(query)`
+  // นำข้อมูลที่ส่งมาใน Request Body ทั้งหมด Assign ใส่ลงไปใน Variable ที่ชื่อว่า `movieData`
+  const movieData = req.body; // Ensure this is an array of movie objects
+  const result = await collection.insertMany(movieData);
+  // 4) Return ตัว Response กลับไปหา Client
+  return res.json({
+    message: `${result.insertedCount} movie records have been created successfully`,
+    insertedIds: result.insertedIds,
+  });
+});
+
+movieRouter.post("/", async (req, res) => {
+  // 2) เลือก Collection ที่ชื่อ `movies`
+  const collection = db.collection("movies");
+
   // 3) เริ่ม Insert ข้อมูลลงใน Database โดยใช้ `collection.insertOne(query)`
   // นำข้อมูลที่ส่งมาใน Request Body ทั้งหมด Assign ใส่ลงไปใน Variable ที่ชื่อว่า `movieData`
   const movieData = { ...req.body };
-  const movies = await collection.insertOne(movieData);
+  const movies = await collection.insertMany(movieData);
   // 4) Return ตัว Response กลับไปหา Client
   return res.json({
     message: `Movie record (${movies.insertedId}) has been created successfully`,
